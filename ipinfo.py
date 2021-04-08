@@ -17,25 +17,22 @@ def cyan(text):
 
 def ipInfo(ip_list):
 	for i,ip in enumerate(ip_list):
-		r = requests.get('https://ipinfo.io/'+ip)
+		r = requests.get('http://ip-api.com/json/'+ip)
 		data = r.json()
 		if i > 0:
 			print()
-		if 'error' in data:
-			print(red(data['error']['message']))
-		if 'bogon' in data:
+		if 'fail' in data:
+			print(red('Invalid IP address'))
+		if 'private range' in data:
 			print(red(ip + ' is a private IP address'))
 		else:
-			print(green('IP:'),data['ip'])
-			#print(green('Hostname:'),data['hostname'])
+			print(green('IP:'),data['query'])
 			print(green('City:'),data['city'])
-			print(green('Region:'),data['region'])
 			print(green('Country:'),data['country'])
-			print(green('Location:'),data['loc'])
-			print(green('Google maps URL:'),cyan('https://google.com/maps/@'+data['loc']+',12z'))
-			print(green('Org:'),data['org'])
-			print(green('Postal code:'),data['postal'])
-			print(green('Timezone:'),data['timezone'])
+			print(green('Latitude:'),str(data['lat']))
+			print(green('Longitude'),str(data['lon']))
+			print(green('Google maps URL:'),cyan('https://google.com/maps/@'+str(data['lat'])+','+str(data['lon'])+',12z'))
+			print(green('ISP:'),data['isp'])
 
 if len(sys.argv) > 1:
 	ip_list = sys.argv[1:]
